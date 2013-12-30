@@ -14,3 +14,4 @@ DEF middle == canvasWidth/2
 DEF canvasBackground == grey
 DEF sampleText == "Hallo"
 DEF stdFont == variable
+DEF exitButton == "Exit tinyHTML"

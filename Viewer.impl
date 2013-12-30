@@ -1,6 +1,7 @@
 IMPLEMENTATION Viewer
 
 IMPORT Settings COMPLETELY
+       Layout COMPLETELY
 
 IMPORT Com COMPLETELY
        ComCompose COMPLETELY
@@ -42,8 +43,8 @@ DEF viewer ==
 -- ---------------------------------------------------------------------
 FUN setupGui : com[gui]
 DEF setupGui == 
-                canvasEditor            & (\\edit.
-                emitter                 & (\\emit.
+                canvasEditor            & (\\edit. -- com[canvasEditor]
+                emitter                 & (\\emit. -- 
                 fontMetrics(stdFont)    & (\\metr.
                 succeed(gui(edit, emit, "Example for TinyHTML", metr)))))
 
@@ -73,7 +74,7 @@ DEF pad(editor) == canvas with (size(canvasSize)
 FUN exitButton : emitter[action] -> view
 DEF exitButton(emit) == 
                         button with (bind(emit, exit)
-                        ++ text("Exit"))
+                        ++ text(exitButton))
 
 
 
