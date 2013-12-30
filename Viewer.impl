@@ -2,6 +2,7 @@ IMPLEMENTATION Viewer
 
 IMPORT Settings COMPLETELY
        Layout COMPLETELY
+       Draw COMPLETELY
 
 IMPORT Com COMPLETELY
        ComCompose COMPLETELY
@@ -34,8 +35,9 @@ DATA action == exit
 -- Entry Function
 -- ---------------------------------------------------------------------
 DEF viewer == 
-              setupGui        & (\\G.
-              setupWindow(G)  & (\\win.
+              setupGui                          & (\\G.
+              setupWindow(G)                    & (\\win.
+              display(edit(G), draw(testData))  &
               waitForTermination(G, win)))
 
 -- ---------------------------------------------------------------------

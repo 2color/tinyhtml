@@ -1,0 +1,14 @@
+IMPLEMENTATION Draw
+
+IMPORT Settings COMPLETELY
+       Layout COMPLETELY
+       Seq[posWord] COMPLETELY
+       Seq[point] COMPLETELY
+       WinCanvasEditor COMPLETELY
+       WinConfig COMPLETELY
+
+-- FUN line : seq[point] -> drawing
+
+DEF draw(posWords) == line( %(left @ ("40" px), right @ ("40" px)) )
+
+-- DEF draw(<>) == 
