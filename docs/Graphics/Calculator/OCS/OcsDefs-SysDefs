@@ -1,0 +1,31 @@
+# top-level command calculator'Calculator
+TOPSTRUCT = Calculator
+TOPCOM = calculator
+SYS_LDFLAGS = $(VAR_LDFLAGS) 
+SYS_LDLIBS =  -lopal_win -lopal_base $(VAR_LDLIBS)
+SYS_LDLIBPATH =  -L/opt/ocs-2.4b/lib/opal_win -L/opt/ocs-2.4b/lib/opal_base $(VAR_LDLIBPATH)
+SYS_LDLIBDEPS =  $(VAR_LDLIBDEPS)
+SYS_OC1FLAGS = $(VAR_OC1FLAGS)  -v0
+SYS_OC2FLAGS = $(VAR_OC2FLAGS)  -v0
+SYS_CCFLAGS = $(VAR_CCFLAGS) 
+GENSTRUCTS =  Calculator
+SIGNS =  Calculator.sign
+IMPLS =  Calculator.impl
+EXPS =  OCS/Calculator.sign.inter
+ANAS =  OCS/Calculator.impl.inter
+OPTS =  OCS/Calculator.opt
+CS = 
+OS =  OCS/Calculator.o
+ESYSTEMS = 
+FSYSTEMS =  /opt/ocs-2.4b/lib/opal_base /opt/ocs-2.4b/lib/opal_win
+SIGNDEPS =  OCS/Calculator.sign.deps
+IMPLDEPS =  OCS/Calculator.impl.deps
+OCS/Calculator.sign.inter: Calculator.sign
+	@$(ECHO) "Checking Signature of Calculator ..." && $(OC1) $(OC1FLAGS) $(SYS_OC1FLAGS) -s  -h. Calculator  -e/opt/ocs-2.4b/lib/opal_base -r  Com Void $(OCSYSPARAM)
+	@if [ -n "$(PROJECTROOT)" ] ; then $(ECHO) "Marking Calculator for documentation ..." &&  $(ECHO) Calculator >> $(PROJECTROOT)/DOSFOP/only ; fi
+OCS/Calculator.o  OCS/Calculator.opt: OCS/Calculator.sign.inter Calculator.impl
+	@if [ "$@" = "OCS/Calculator.o" ] ; then $(ECHO) "Compiling Implementation of Calculator ..." && \
+	$(OC1) $(OC1FLAGS) $(SYS_OC1FLAGS) -i  -h. Calculator  -e/opt/ocs-2.4b/lib/opal_base -r  ComSeqReduce ComAction ComAgent ComCheck ComCompose Com Denotation RealConv Real Nat SeqZip SeqReduce SeqFold SeqMap Seq Void -e/opt/ocs-2.4b/lib/opal_win -r  WinButton WinRegulator WinEvent WinEmitter WinConfig WinWindow WinView $(OCSYSPARAM)\
+	&& $(OC2) $(OC2FLAGS) $(SYS_OC2FLAGS) -zgForeignInterface  -h. Calculator  -e/opt/ocs-2.4b/lib/opal_base -r  ComSeqReduce ComAction ComAgent ComCheck ComCompose Com Denotation RealConv Real Nat SeqZip SeqReduce SeqFold SeqMap Seq Void -e/opt/ocs-2.4b/lib/opal_win -r  WinButton WinRegulator WinEvent WinEmitter WinConfig WinWindow WinView $(OCSYSPARAM)\
+	&& $(ECHO) "Generating $(ARCH) object code for Calculator ..." && $(CC) $(CCFLAGS) $(SYS_CCFLAGS) -c OCS/Calculator.oc.c -o OCS/Calculator.o && $(RM) -f OCS/Calculator.oc.c; fi
+	@if [ -n "$(PROJECTROOT)" ] ; then $(ECHO) "Marking Calculator for documentation ..." &&  $(ECHO) Calculator >> $(PROJECTROOT)/DOSFOP/only ; fi
