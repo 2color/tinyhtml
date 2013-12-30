@@ -1,0 +1,16 @@
+IMPLEMENTATION Settings
+
+IMPORT Nat COMPLETELY
+        
+IMPORT WinConfig COMPLETELY
+
+DEF canvasWidth == "940" px
+DEF canvasHeight == "600" px
+DEF canvasSize == canvasWidth x canvasHeight
+DEF margin == "50" px
+DEF left == margin
+DEF right == canvasWidth-margin
+DEF middle == canvasWidth/2
+DEF canvasBackground == grey
+DEF sampleText == "Hallo"
+DEF stdFont == variable

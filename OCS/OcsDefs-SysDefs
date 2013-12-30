@@ -1,0 +1,40 @@
+# top-level command viewer'Viewer
+TOPSTRUCT = Viewer
+TOPCOM = viewer
+SYS_LDFLAGS = $(VAR_LDFLAGS) 
+SYS_LDLIBS =  -lopal_base -lopal_win $(VAR_LDLIBS)
+SYS_LDLIBPATH =  -L/opt/ocs-2.4b/lib/opal_base -L/opt/ocs-2.4b/lib/opal_win $(VAR_LDLIBPATH)
+SYS_LDLIBDEPS =  $(VAR_LDLIBDEPS)
+SYS_OC1FLAGS = $(VAR_OC1FLAGS)  -v0
+SYS_OC2FLAGS = $(VAR_OC2FLAGS)  -v0
+SYS_CCFLAGS = $(VAR_CCFLAGS) 
+GENSTRUCTS =  Settings Viewer
+SIGNS =  Settings.sign Viewer.sign
+IMPLS =  Settings.impl Viewer.impl
+EXPS =  OCS/Settings.sign.inter OCS/Viewer.sign.inter
+ANAS =  OCS/Settings.impl.inter OCS/Viewer.impl.inter
+OPTS =  OCS/Settings.opt OCS/Viewer.opt
+CS = 
+OS =  OCS/Settings.o OCS/Viewer.o
+ESYSTEMS = 
+FSYSTEMS =  /opt/ocs-2.4b/lib/opal_win /opt/ocs-2.4b/lib/opal_base
+SIGNDEPS =  OCS/Settings.sign.deps OCS/Viewer.sign.deps
+IMPLDEPS =  OCS/Settings.impl.deps OCS/Viewer.impl.deps
+OCS/Settings.sign.inter: Settings.sign
+	@$(ECHO) "Checking Signature of Settings ..." && $(OC1) $(OC1FLAGS) $(SYS_OC1FLAGS) -s  -h. Settings  -e/opt/ocs-2.4b/lib/opal_base -r  Real -e/opt/ocs-2.4b/lib/opal_win -r  WinConfig $(OCSYSPARAM)
+	@if [ -n "$(PROJECTROOT)" ] ; then $(ECHO) "Marking Settings for documentation ..." &&  $(ECHO) Settings >> $(PROJECTROOT)/DOSFOP/only ; fi
+OCS/Settings.o  OCS/Settings.opt: OCS/Settings.sign.inter Settings.impl
+	@if [ "$@" = "OCS/Settings.o" ] ; then $(ECHO) "Compiling Implementation of Settings ..." && \
+	$(OC1) $(OC1FLAGS) $(SYS_OC1FLAGS) -i  -h. Settings  -e/opt/ocs-2.4b/lib/opal_base -r  Nat -e/opt/ocs-2.4b/lib/opal_win -r  WinConfig $(OCSYSPARAM)\
+	&& $(OC2) $(OC2FLAGS) $(SYS_OC2FLAGS)   -h. Settings  -e/opt/ocs-2.4b/lib/opal_base -r  Nat -e/opt/ocs-2.4b/lib/opal_win -r  WinConfig $(OCSYSPARAM)\
+	&& $(ECHO) "Generating $(ARCH) object code for Settings ..." && $(CC) $(CCFLAGS) $(SYS_CCFLAGS) -c OCS/Settings.oc.c -o OCS/Settings.o && $(RM) -f OCS/Settings.oc.c; fi
+	@if [ -n "$(PROJECTROOT)" ] ; then $(ECHO) "Marking Settings for documentation ..." &&  $(ECHO) Settings >> $(PROJECTROOT)/DOSFOP/only ; fi
+OCS/Viewer.sign.inter: Viewer.sign
+	@$(ECHO) "Checking Signature of Viewer ..." && $(OC1) $(OC1FLAGS) $(SYS_OC1FLAGS) -s  -h. Viewer  -e/opt/ocs-2.4b/lib/opal_base -r  Void Com $(OCSYSPARAM)
+	@if [ -n "$(PROJECTROOT)" ] ; then $(ECHO) "Marking Viewer for documentation ..." &&  $(ECHO) Viewer >> $(PROJECTROOT)/DOSFOP/only ; fi
+OCS/Viewer.o  OCS/Viewer.opt: OCS/Viewer.sign.inter Viewer.impl OCS/Settings.sign.inter
+	@if [ "$@" = "OCS/Viewer.o" ] ; then $(ECHO) "Compiling Implementation of Viewer ..." && \
+	$(OC1) $(OC1FLAGS) $(SYS_OC1FLAGS) -i  -h. Viewer  -h. -r  Settings -e/opt/ocs-2.4b/lib/opal_base -r  Void Seq Real Nat Denotation ComCompose Com -e/opt/ocs-2.4b/lib/opal_win -r  WinView WinWindow WinFontMetrics WinEmitter WinConfig WinCanvasEditor WinCanvas WinButton $(OCSYSPARAM)\
+	&& $(OC2) $(OC2FLAGS) $(SYS_OC2FLAGS) -zgForeignInterface  -h. Viewer  -h. -r  Settings -e/opt/ocs-2.4b/lib/opal_base -r  Void Seq Real Nat Denotation ComCompose Com -e/opt/ocs-2.4b/lib/opal_win -r  WinView WinWindow WinFontMetrics WinEmitter WinConfig WinCanvasEditor WinCanvas WinButton $(OCSYSPARAM)\
+	&& $(ECHO) "Generating $(ARCH) object code for Viewer ..." && $(CC) $(CCFLAGS) $(SYS_CCFLAGS) -c OCS/Viewer.oc.c -o OCS/Viewer.o && $(RM) -f OCS/Viewer.oc.c; fi
+	@if [ -n "$(PROJECTROOT)" ] ; then $(ECHO) "Marking Viewer for documentation ..." &&  $(ECHO) Viewer >> $(PROJECTROOT)/DOSFOP/only ; fi

@@ -1,0 +1,12 @@
+SIGNATURE Settings
+
+IMPORT Real COMPLETELY
+
+IMPORT WinConfig COMPLETELY
+
+FUN canvasWidth canvasHeight : real
+FUN canvasSize : size
+FUN margin left right middle : real
+FUN canvasBackground : color
+FUN sampleText : denotation
+FUN stdFont : font
