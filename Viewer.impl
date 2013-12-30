@@ -21,7 +21,9 @@ IMPORT WinButton COMPLETELY
        WinWindow COMPLETELY
        WinView COMPLETELY
 
-
+-- ---------------------------------------------------------------------
+-- Type definitions
+-- ---------------------------------------------------------------------
 
 DATA gui == gui(edit : canvasEditor,
                 emit : emitter[action],
@@ -46,7 +48,7 @@ DEF viewer ==
 FUN setupGui : com[gui]
 DEF setupGui == 
                 canvasEditor            & (\\edit. -- com[canvasEditor]
-                emitter                 & (\\emit. -- 
+                emitter                 & (\\emit. -- com[emitter]
                 fontMetrics(stdFont)    & (\\metr.
                 succeed(gui(edit, emit, "Example for TinyHTML", metr)))))
 
@@ -81,7 +83,7 @@ DEF exitButton(emit) ==
 
 
 -- ---------------------------------------------------------------------
--- Application Logic
+-- Event Binding
 -- ---------------------------------------------------------------------
 FUN waitForTermination : gui ** window -> com[void]
 DEF waitForTermination(G, win) ==

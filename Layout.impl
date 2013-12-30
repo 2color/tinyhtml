@@ -4,17 +4,18 @@ IMPORT WinConfig ONLY point @
        String COMPLETELY
        Real COMPLETELY
        Denotation COMPLETELY
+       Settings COMPLETELY
 
 DATA posWord == posWord(text : string, pos : point, width : real)
 
-DEF testData == posWord(string1, @(10,"20"!), "40"!) ::
-                posWord(string2, @(10,"40"!), "40"!) ::
-                posWord(string3, @(10,"60"!), "40"!) ::
-                posWord(string4, @(10,"80"!), "40"!) :: <>
+DEF testData == posWord(word1, @( left, margin), 0) ::
+                posWord(word2, @("40"!'Real, margin), 0) ::
+                posWord(word3, @("60"!'Real, margin), 0) ::
+                posWord(word4, @("80"!'Real, margin), 0) :: <>
 
-FUN string1 string2 string3 string4 : string
+FUN word1 word2 word3 word4 : string
 
-DEF string1 == !("Sample Text 1")
-DEF string2 == !("Sample Text 2")
-DEF string3 == !("Sample Text 3")
-DEF string4 == !("Sample Text 4")
+DEF word1 == !("word1")
+DEF word2 == !("word2")
+DEF word3 == !("word3")
+DEF word4 == !("word4")

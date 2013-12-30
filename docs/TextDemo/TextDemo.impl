@@ -76,12 +76,15 @@ DEF text == above ++ on ++ below
 FUN boxedText : metrics -> drawing
 DEF boxedText(metr) == txt ++ box
 WHERE
-txt == text(upperLeft)
-with (text(sampleText) ++ anchor(north-west) ++ font(stdFont))
-upperLeft == middle @ ("100" px)
-(w, h) == dimensions(metr)(sampleText)
-lowerRight == xc(upperLeft)+w @ yc(upperLeft)+h
-box == rectangle(upperLeft, lowerRight)
+  txt == text(upperLeft)
+  with (text(sampleText) ++ anchor(north-west) ++ font(stdFont))
+  
+  upperLeft == middle @ ("100" px)
+  (w, h) == dimensions(metr)(sampleText)
+  lowerRight == xc(upperLeft)+w @ yc(upperLeft)+h
+  box == rectangle(upperLeft, lowerRight)
+
+
 FUN waitForTermination : gui ** window -> com[void]
 DEF waitForTermination(G, win) ==
 await(emit(G)) & (\\act.
