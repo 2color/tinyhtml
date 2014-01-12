@@ -11,6 +11,7 @@ DEF margin == "50" px
 DEF left == margin
 DEF right == canvasWidth-margin
 DEF middle == canvasWidth/2
-DEF canvasBackground == grey
+DEF canvasBackground == white
 DEF stdFont == variable
 DEF exitButton == "Exit tinyHTML"
+DEF title == "tinyHTML"

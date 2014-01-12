@@ -50,7 +50,7 @@ DEF setupGui ==
                 canvasEditor            & (\\edit. -- com[canvasEditor]
                 emitter                 & (\\emit. -- com[emitter]
                 fontMetrics(stdFont)    & (\\metr.
-                succeed(gui(edit, emit, "Example for TinyHTML", metr)))))
+                succeed(gui(edit, emit, title, metr)))))
 
 
 FUN setupWindow : gui -> com[window]

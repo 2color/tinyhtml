@@ -9,4 +9,4 @@ FUN canvasSize : size
 FUN margin left right middle : real
 FUN canvasBackground : color
 FUN stdFont : font
-FUN exitButton : denotation
+FUN exitButton title : denotation
