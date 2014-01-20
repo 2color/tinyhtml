@@ -7,7 +7,7 @@ IMPORT WinConfig ONLY point
        Syntax COMPLETELY
 
 
-FUN layout : metrics ** seq[par] -> seq[posWord]
+FUN layout : metrics ** body -> seq[posWord]
 
 TYPE posWord == posWord(text : string, pos : point, width : real)
 

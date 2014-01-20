@@ -7,10 +7,21 @@ IMPORT WinConfig ONLY point @
        Settings COMPLETELY
        Syntax COMPLETELY
 
+IMPORT Seq COMPLETELY
+       SeqMap COMPLETELY
+       SeqMapEnv COMPLETELY
+       SeqOfSeq COMPLETELY
+       SeqReduce COMPLETELY
+       SeqZip COMPLETELY
+
 DATA posWord == posWord(text : string, pos : point, width : real)
 
 
-DEF layout(metrics, ps) == posWord(word1, @( left, margin), 0) :: <>
+DEF layout(metrics, body(par(left,content) :: rt)) == posWord(word1, @( left, margin), 0) :: <>
+DEF layout(metrics, body(par(right,content) :: rt)) == >>
+DEF layout(metrics, body(par(center,content) :: rt)) == >>
+DEF layout(metrics, body(par(justify,content) :: rt)) == >>
+DEF layout(metrics, fail) == <>
 
 
 DEF testBody == body( par(left, seq1) ::
@@ -24,7 +35,7 @@ DEF word2 == !("word2")
 DEF word3 == !("word3")
 DEF word4 == !("word4")
 DEF word5 == !("word5")
-DEF word6 == !("word6")
+DEF word6 == !("word6") 
 
 FUN seq1 seq2 : seq[string]
 DEF seq1 == word1 :: word3 :: word5 :: word1 :: word3 :: word5 :: word1 :: word3 :: word5 :: <>

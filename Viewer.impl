@@ -39,7 +39,7 @@ DATA action == exit
 DEF viewer == 
               setupGui                          & (\\G.
               setupWindow(G)                    & (\\win.
-              display(edit(G), draw(layout(metr(G), content(testBody))))  &
+              display(edit(G), draw(layout(metr(G), testBody)))  &
               waitForTermination(G, win)))
 
 -- ---------------------------------------------------------------------
