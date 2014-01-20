@@ -5,17 +5,27 @@ IMPORT WinConfig ONLY point @
        Real COMPLETELY
        Denotation COMPLETELY
        Settings COMPLETELY
+       Syntax COMPLETELY
 
 DATA posWord == posWord(text : string, pos : point, width : real)
 
-DEF testData == posWord(word1, @( left, margin), 0) ::
-                posWord(word2, @("40"!'Real, margin), 0) ::
-                posWord(word3, @("60"!'Real, margin), 0) ::
-                posWord(word4, @("80"!'Real, margin), 0) :: <>
 
-FUN word1 word2 word3 word4 : string
+DEF layout(metrics, ps) == posWord(word1, @( left, margin), 0) :: <>
 
+
+DEF testBody == body( par(left, seq1) ::
+                      par(right, seq2) ::
+                      par(center, seq1) ::
+                      par(justify, seq2) :: <>)
+
+FUN word1 word2 word3 word4 word5 word6 : string
 DEF word1 == !("word1")
 DEF word2 == !("word2")
 DEF word3 == !("word3")
 DEF word4 == !("word4")
+DEF word5 == !("word5")
+DEF word6 == !("word6")
+
+FUN seq1 seq2 : seq[string]
+DEF seq1 == word1 :: word3 :: word5 :: word1 :: word3 :: word5 :: word1 :: word3 :: word5 :: <>
+DEF seq2 == word2 :: word2 :: word6 :: word4 :: word2 :: word5 :: word4 :: word2 :: word6 :: <>
