@@ -6,7 +6,7 @@ IMPORT WinConfig COMPLETELY
 
 FUN canvasWidth canvasHeight : real
 FUN canvasSize : size
-FUN margin left right middle : real
+FUN margin left right middle usableWidth : real
 FUN canvasBackground : color
 FUN stdFont : font
 FUN exitButton title : denotation

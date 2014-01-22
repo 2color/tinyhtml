@@ -7,6 +7,7 @@ IMPORT WinConfig COMPLETELY
 DEF canvasWidth == "500" px
 DEF canvasHeight == "600" px
 DEF canvasSize == canvasWidth x canvasHeight
+DEF usableWidth == canvasWidth - 2 * margin
 DEF margin == "50" px
 DEF left == margin
 DEF right == canvasWidth-margin

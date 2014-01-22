@@ -2,10 +2,14 @@ IMPLEMENTATION Layout
 
 IMPORT WinConfig ONLY point @
        String COMPLETELY
+       StringConv COMPLETELY
+       WinFontMetrics COMPLETELY
        Real COMPLETELY
+       --Pair COMPLETELY
        Denotation COMPLETELY
        Settings COMPLETELY
        Syntax COMPLETELY
+       Compose COMPLETELY
 
 IMPORT Seq COMPLETELY
        SeqMap COMPLETELY
@@ -17,10 +21,28 @@ IMPORT Seq COMPLETELY
 DATA posWord == posWord(text : string, pos : point, width : real)
 
 
-DEF layout(metrics, body(par(left,content) :: rt)) == posWord(word1, @( left, margin), 0) :: <>
-DEF layout(metrics, body(par(right,content) :: rt)) == >>
-DEF layout(metrics, body(par(center,content) :: rt)) == >>
-DEF layout(metrics, body(par(justify,content) :: rt)) == >>
+-- FUN layout : metrics ** body -> seq[posWord]
+-- posWord(word1, @( left, margin), 0) :: <>
+
+DEF layout(metr, body(pars)) == <>
+
+
+
+-- Calculate Layout for a single paragraph
+FUN layoutPar : metrics ** par -> seq[posWord]
+DEF layoutPar(metr, par(align, words)) ==  <>
+    WHERE
+        denotations == map(`)(words)
+        pairs == map(dimensions(metr))(denotations)
+        --(w,h) == dimensions(metr)(word`)
+
+
+--FUN first : (real ** real) -> real
+--DEF first( one, two ) == one
+
+--DEF layout(metrics, body(par(right,content) :: rt)) == <>
+--DEF layout(metrics, body(par(center,content) :: rt)) == <>
+--DEF layout(metrics, body(par(justify,content) :: rt)) == <>
 DEF layout(metrics, fail) == <>
 
 
