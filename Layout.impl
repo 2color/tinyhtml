@@ -33,15 +33,22 @@ DEF layout(metr, fail) == <>
 FUN layoutPars : metrics ** seq[par] -> seq[posWord]
 DEF layoutPars(metr, <>) == <>
 DEF layoutPars(metr, par(align, words) :: rt) == 
-    layoutPar(metr, break(wordWidths)) ++ layoutPars(metr, rt)
+    layoutPar(align, break(wordWidths)) ++ layoutPars(metr, rt)
     WHERE
         widths == getWidth(metr) * (words)
         wordWidths == zip(word)(words,widths)
 
 
-FUN layoutPar : metrics ** seq[seq[word]] -> seq[posWord]
-DEF layoutPar(metr, <>) == <>
-DEF layoutPar(metr, ::(word :: rt, lines)) == <>
+FUN layoutPar : alignment ** seq[seq[word]] -> seq[posWord]
+DEF layoutPar(_, <>) == <>
+DEF layoutPar(align, line :: rt) ==
+    layoutLine(align, line) ++ layoutPar(align, rt)
+
+        
+
+FUN layoutLine : alignment ** seq[word] -> seq[posWord]
+DEF layoutLine(_, <>) == <>
+DEF layoutLine(align, word :: rt ) == <>
 
 
 
@@ -93,12 +100,13 @@ DEF testBody == body( par(left, seq1) ::
                       par(justify, seq2) :: <>)
 
 FUN word1 word2 word3 word4 word5 word6 : string
-DEF word1 == !("word1")
-DEF word2 == !("word2")
-DEF word3 == !("word3")
-DEF word4 == !("word4")
-DEF word5 == !("word5")
-DEF word6 == !("word6") 
+DEF word1 == !("Lorem")
+DEF word2 == !("ipsum")
+DEF word3 == !("dolor")
+DEF word4 == !("sit")
+DEF word5 == !("amet")
+DEF word6 == !("consetetur") 
+
 
 FUN seq1 seq2 : seq[string]
 DEF seq1 == word1 :: word3 :: word5 :: word1 :: word3 :: word5 :: word1 :: word3 :: word5 :: <>
