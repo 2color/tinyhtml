@@ -5,7 +5,8 @@ IMPORT WinConfig ONLY point @
        StringConv COMPLETELY
        WinFontMetrics COMPLETELY
        Real COMPLETELY
-       --Pair COMPLETELY
+       Nat  COMPLETELY
+       Pair COMPLETELY
        Denotation COMPLETELY
        Settings COMPLETELY
        Syntax COMPLETELY
@@ -19,23 +20,63 @@ IMPORT Seq COMPLETELY
        SeqZip COMPLETELY
 
 DATA posWord == posWord(text : string, pos : point, width : real)
-
+DATA word == word(text : string, width : real)
 
 -- FUN layout : metrics ** body -> seq[posWord]
 -- posWord(word1, @( left, margin), 0) :: <>
 
-DEF layout(metr, body(pars)) == <>
+DEF layout(metr, body(pars)) == layoutPars(metr,pars)
+DEF layout(metr, fail) == <>
 
 
-
--- Calculate Layout for a single paragraph
-FUN layoutPar : metrics ** par -> seq[posWord]
-DEF layoutPar(metr, par(align, words)) ==  <>
+-- Calculate Layout for all paragraphs
+FUN layoutPars : metrics ** seq[par] -> seq[posWord]
+DEF layoutPars(metr, <>) == <>
+DEF layoutPars(metr, par(align, words) :: rt) == 
+    layoutPar(metr, break(wordWidths)) ++ layoutPars(metr, rt)
     WHERE
-        denotations == map(`)(words)
-        pairs == map(dimensions(metr))(denotations)
-        --(w,h) == dimensions(metr)(word`)
+        widths == getWidth(metr) * (words)
+        wordWidths == zip(word)(words,widths)
 
+
+FUN layoutPar : metrics ** seq[seq[word]] -> seq[posWord]
+DEF layoutPar(metr, <>) == <>
+DEF layoutPar(metr, ::(word :: rt, lines)) == <>
+
+
+
+FUN break : seq[word] -> seq[seq[word]]
+DEF break(<>) == <>
+DEF break(word :: rt) == 
+    LET 
+        wordWidth       == width(word)
+        k               == 1 + fit(usableWidth - wordWidth)(rt)
+        (line, trailer) == split(k, rt)
+    IN
+        line :: break(trailer)
+
+
+FUN fit : real -> seq[word] -> nat
+DEF fit(supply)(<>) == 0
+DEF fit(supply)(word :: rt) == 
+    LET 
+        needed == glue + width(word)
+    IN
+        IF      needed <= supply THEN 1 + fit(supply - needed)(rt)
+        ELSE    0
+        FI
+
+
+
+FUN getWidth : metrics -> string -> real
+DEF getWidth(metr)(str) == w
+  WHERE
+    (w,h) == dimensions(metr)(`(str)) 
+    
+  
+
+-- write a function that accepts a p
+--FUN stringsToDenotations : seq[]
 
 --FUN first : (real ** real) -> real
 --DEF first( one, two ) == one
@@ -43,7 +84,7 @@ DEF layoutPar(metr, par(align, words)) ==  <>
 --DEF layout(metrics, body(par(right,content) :: rt)) == <>
 --DEF layout(metrics, body(par(center,content) :: rt)) == <>
 --DEF layout(metrics, body(par(justify,content) :: rt)) == <>
-DEF layout(metrics, fail) == <>
+
 
 
 DEF testBody == body( par(left, seq1) ::
