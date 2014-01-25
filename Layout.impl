@@ -71,7 +71,7 @@ DEF break(word :: rt) ==
     LET 
         wordWidth       == width(word)
         k               == 1 + fit(usableWidth - wordWidth)(rt)
-        (line, trailer) == split(k, rt)
+        (line, trailer) == split(k, word :: rt)
     IN
         line :: break(trailer)
 
