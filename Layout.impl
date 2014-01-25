@@ -6,6 +6,7 @@ IMPORT WinConfig ONLY point @
        WinFontMetrics COMPLETELY
        Real COMPLETELY
        Nat  COMPLETELY
+       NatConv  ONLY asReal
        Pair COMPLETELY
        Denotation COMPLETELY
        Settings COMPLETELY
@@ -22,33 +23,45 @@ IMPORT Seq COMPLETELY
 DATA posWord == posWord(text : string, pos : point, width : real)
 DATA word == word(text : string, width : real)
 
--- FUN layout : metrics ** body -> seq[posWord]
--- posWord(word1, @( left, margin), 0) :: <>
-
-DEF layout(metr, body(pars)) == layoutPars(metr,pars)
+DEF layout(metr, body(pars)) == layoutPars(metr, margin, pars)
 DEF layout(metr, fail) == <>
 
 
 -- Calculate Layout for all paragraphs
-FUN layoutPars : metrics ** seq[par] -> seq[posWord]
-DEF layoutPars(metr, <>) == <>
-DEF layoutPars(metr, par(align, words) :: rt) == 
-    layoutPar(align, break(wordWidths)) ++ layoutPars(metr, rt)
+FUN layoutPars : metrics ** real ** seq[par] -> seq[posWord]
+DEF layoutPars(metr, _, <>) == <>
+DEF layoutPars(metr, yPos, par(align, words) :: rt) == 
+    layoutPar(align, lineHeight, yPos, 1, lines ) ++ layoutPars(metr, nextParY, rt)
     WHERE
         widths == getWidth(metr) * (words)
+        lineHeight == height(metr) + lineSpacing
+        lines  == break(wordWidths)
+        parHeight ==  (asReal(lineCount) * lineHeight) + yPos
+        nextParY == parHeight + parSpacing
+        lineCount == #(lines)
         wordWidths == zip(word)(words,widths)
 
 
-FUN layoutPar : alignment ** seq[seq[word]] -> seq[posWord]
-DEF layoutPar(_, <>) == <>
-DEF layoutPar(align, line :: rt) ==
-    layoutLine(align, line) ++ layoutPar(align, rt)
+FUN layoutPar : alignment ** real ** real ** real ** seq[seq[word]] -> seq[posWord]
+DEF layoutPar(_, _, _, _, <>) == <>
+DEF layoutPar(align, lineHeight, yPos , lineNum,  line :: rt) ==
+    layoutLine(align, xMargin, lineYPosition, line) ++ 
+        layoutPar(align, lineHeight, yPos, lineNum + 1 , rt)
+    WHERE
+        xMargin == margin
+        lineYPosition == yPos + (lineHeight + lineSpacing) * lineNum
+
 
         
 
-FUN layoutLine : alignment ** seq[word] -> seq[posWord]
-DEF layoutLine(_, <>) == <>
-DEF layoutLine(align, word :: rt ) == <>
+FUN layoutLine : alignment ** real ** real ** seq[word] -> seq[posWord]
+DEF layoutLine(_, _, _, <>) == <>
+
+DEF layoutLine(align, x, y, word(text, width) :: rt ) == 
+    posWord(text, @( x, y), width) ::  layoutLine(align, nextX, y, rt)
+    WHERE
+        nextX == x + width + glue
+
 
 
 
@@ -82,32 +95,30 @@ DEF getWidth(metr)(str) == w
     
   
 
--- write a function that accepts a p
---FUN stringsToDenotations : seq[]
-
---FUN first : (real ** real) -> real
---DEF first( one, two ) == one
-
---DEF layout(metrics, body(par(right,content) :: rt)) == <>
---DEF layout(metrics, body(par(center,content) :: rt)) == <>
---DEF layout(metrics, body(par(justify,content) :: rt)) == <>
-
-
-
 DEF testBody == body( par(left, seq1) ::
                       par(right, seq2) ::
                       par(center, seq1) ::
                       par(justify, seq2) :: <>)
 
+FUN testWords : seq[word]
+DEF testWords == word(word1, "15"!) :: word(word2, "15"!) :: word(word3, "15"!) :: word(word4, "15"!):: word(word5, "15"!) :: <>
+
+
 FUN word1 word2 word3 word4 word5 word6 : string
-DEF word1 == !("Lorem")
-DEF word2 == !("ipsum")
-DEF word3 == !("dolor")
-DEF word4 == !("sit")
-DEF word5 == !("amet")
-DEF word6 == !("consetetur") 
+-- DEF word1 == !("Lorem")
+-- DEF word2 == !("ipsum")
+-- DEF word3 == !("dolor")
+-- DEF word4 == !("sit")
+-- DEF word5 == !("amet")
+-- DEF word6 == !("consetetur") 
+DEF word1 == !("word1")
+DEF word2 == !("word2")
+DEF word3 == !("word3")
+DEF word4 == !("word4")
+DEF word5 == !("word5")
+DEF word6 == !("word6") 
 
 
 FUN seq1 seq2 : seq[string]
-DEF seq1 == word1 :: word3 :: word5 :: word1 :: word3 :: word5 :: word1 :: word3 :: word5 :: <>
+DEF seq1 == word1 :: word2 :: word3 :: word4 :: word5 :: word6 :: word1 :: word2 :: word3 :: <>
 DEF seq2 == word2 :: word2 :: word6 :: word4 :: word2 :: word5 :: word4 :: word2 :: word6 :: <>
