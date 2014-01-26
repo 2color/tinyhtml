@@ -66,11 +66,19 @@ DEF layoutPar(align, lineHeight, yPos , lineNum,  line :: rt) ==
 FUN layoutLine : alignment ** real ** real ** seq[word] -> seq[posWord]
 DEF layoutLine(_, _, _, <>) == <>
 
+
+
+-- ---------------------------------------------------------------  
+-- Left Align 
+-- ---------------------------------------------------------------  
 DEF layoutLine(left, x, y, word(wordText, wordWidth) :: rt ) == 
     posWord(wordText, @( x, y), wordWidth)  ::  layoutLine(left, nextX, y, rt)
     WHERE
         nextX == x + wordWidth + glue
 
+-- ---------------------------------------------------------------  
+-- Right Align
+-- ---------------------------------------------------------------  
 DEF layoutLine(right, x, y, word :: rt ) == 
     posWord(wordText, @( xPos, y), wordWidth) :: layoutLine(left, nextX, y, rt)
     WHERE
@@ -78,23 +86,44 @@ DEF layoutLine(right, x, y, word :: rt ) ==
         wordWidth == width(word)
         nextX == xPos + wordWidth + glue
         widths == map(\\w. width(w) + glue )(word :: rt)
-        xPos == canvasWidth - reduce(+, 0)(widths)
+        xPos == canvasWidth - margin + glue - reduce(+, 0)(widths)
 
 
-DEF layoutLine(center, x, y, word(text, wordWidth) :: rt ) == 
-    posWord(text, @( x, y), wordWidth) ::  layoutLine(left, nextX, y, rt)
-    WHERE
-        nextX == x + wordWidth + glue
-
+-- ---------------------------------------------------------------  
+-- Justify Align
+-- ---------------------------------------------------------------  
 DEF layoutLine(justify, x, y, word :: rt ) == 
-    posWord(wordText, @( x, y), wordWidth) ::  layoutLine(left, nextX, y, rt)
+    posWord(wordText, @( x, y), wordWidth) :: layoutJustify(x + wordWidth, y, space, rt)
     WHERE
         wordText == text(word)
         wordWidth == width(word)
         widths == map(\\w. width(w))(word :: rt)
         sumWidths == reduce(+,0)(widths)
-        space == ( canvasWidth - sumWidths ) / asReal(#(word :: rt) - 1)
-        nextX == x + wordWidth + space
+        space == ( usableWidth - sumWidths ) / (asReal(#(word :: rt)) - 1)
+
+FUN layoutJustify : real ** real ** real ** seq[word] -> seq[posWord]
+DEF layoutJustify(x, y, space, word :: rt ) == 
+    posWord(wordText, @( x + space, y), wordWidth) :: layoutJustify(x + wordWidth + space, y, space, rt)
+    WHERE
+        wordText == text(word)
+        wordWidth == width(word)
+
+DEF layoutJustify(_,_,_, <> ) == <>
+
+
+-- ---------------------------------------------------------------  
+-- Center Align
+-- ---------------------------------------------------------------  
+DEF layoutLine(center, x, y, word :: rt ) == 
+    posWord(wordText, @( firstX, y), wordWidth) ::  layoutLine(left, nextX, y, rt)
+    WHERE
+        wordText == text(word)
+        wordWidth == width(word)
+        widths == map(\\w. width(w))(word :: rt)
+        sumWidths == reduce(+,0)(widths)
+        completeWidth == sumWidths + (asReal(#(word::rt)) - 1 ) * glue
+        firstX == ((usableWidth - completeWidth)/2) + margin
+        nextX == firstX + wordWidth + glue
 
 -- ---------------------------------------------------------------  
 -- break the words into sequences of lines by fitting as many words
@@ -136,9 +165,9 @@ DEF getWidth(metr)(str) == w
 -- Test Data
 -- ---------------------------------------------------------------  
 DEF testBody == body( par(left, seq2) ::
-                      par(right, seq2) ::
-                      -- par(center, seq1) ::
-                      par(justify, seq2) :: <>)
+                      par(right, seq2 ++ seq1 ++ seq1) ::
+                      par(justify, seq1) ::
+                      par(center, seq2 ++ seq1) :: <>)
 
 
 FUN word1 word2 word3 word4 word5 word6 : string
