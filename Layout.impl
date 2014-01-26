@@ -23,13 +23,19 @@ IMPORT Seq COMPLETELY
 DATA posWord == posWord(text : string, pos : point, width : real)
 DATA word == word(text : string, width : real)
 
+-- ---------------------------------------------------------------  
+-- the "public" layout function which calculates the layout for 
+-- the body(containing a list of paragraphs) by means of the metrics
+-- ---------------------------------------------------------------  
 DEF layout(metr, body(pars)) == layoutPars(metr, margin, pars)
 DEF layout(metr, fail) == <>
 
 
+-- ---------------------------------------------------------------  
 -- Calculate Layout for all paragraphs
+-- ---------------------------------------------------------------
 FUN layoutPars : metrics ** real ** seq[par] -> seq[posWord]
-DEF layoutPars(metr, _, <>) == <>
+DEF layoutPars(_, _, <>) == <>
 DEF layoutPars(metr, yPos, par(align, words) :: rt) == 
     layoutPar(align, lineHeight, yPos, 1, lines ) ++ layoutPars(metr, nextParY, rt)
     WHERE
@@ -42,29 +48,58 @@ DEF layoutPars(metr, yPos, par(align, words) :: rt) ==
         wordWidths == zip(word)(words,widths)
 
 
+-- ------------------------------------------------------------------- 
+-- Calculate Layout for a single paragraph by iterating over the lines
+-- -------------------------------------------------------------------
 FUN layoutPar : alignment ** real ** real ** real ** seq[seq[word]] -> seq[posWord]
 DEF layoutPar(_, _, _, _, <>) == <>
 DEF layoutPar(align, lineHeight, yPos , lineNum,  line :: rt) ==
-    layoutLine(align, xMargin, lineYPosition, line) ++ 
+    layoutLine(align, margin, lineYPosition, line) ++ 
         layoutPar(align, lineHeight, yPos, lineNum + 1 , rt)
     WHERE
-        xMargin == margin
         lineYPosition == yPos + (lineHeight + lineSpacing) * lineNum
 
 
-        
-
+-- ---------------------------------------------------------------          
+-- Calculate Layout for a single line by iterating over the words
+-- ---------------------------------------------------------------  
 FUN layoutLine : alignment ** real ** real ** seq[word] -> seq[posWord]
 DEF layoutLine(_, _, _, <>) == <>
 
-DEF layoutLine(align, x, y, word(text, width) :: rt ) == 
-    posWord(text, @( x, y), width) ::  layoutLine(align, nextX, y, rt)
+DEF layoutLine(left, x, y, word(wordText, wordWidth) :: rt ) == 
+    posWord(wordText, @( x, y), wordWidth)  ::  layoutLine(left, nextX, y, rt)
     WHERE
-        nextX == x + width + glue
+        nextX == x + wordWidth + glue
+
+DEF layoutLine(right, x, y, word :: rt ) == 
+    posWord(wordText, @( xPos, y), wordWidth) :: layoutLine(left, nextX, y, rt)
+    WHERE
+        wordText == text(word)
+        wordWidth == width(word)
+        nextX == xPos + wordWidth + glue
+        widths == map(\\w. width(w) + glue )(word :: rt)
+        xPos == canvasWidth - reduce(+, 0)(widths)
 
 
+DEF layoutLine(center, x, y, word(text, wordWidth) :: rt ) == 
+    posWord(text, @( x, y), wordWidth) ::  layoutLine(left, nextX, y, rt)
+    WHERE
+        nextX == x + wordWidth + glue
 
+DEF layoutLine(justify, x, y, word :: rt ) == 
+    posWord(wordText, @( x, y), wordWidth) ::  layoutLine(left, nextX, y, rt)
+    WHERE
+        wordText == text(word)
+        wordWidth == width(word)
+        widths == map(\\w. width(w))(word :: rt)
+        sumWidths == reduce(+,0)(widths)
+        space == ( canvasWidth - sumWidths ) / asReal(#(word :: rt) - 1)
+        nextX == x + wordWidth + space
 
+-- ---------------------------------------------------------------  
+-- break the words into sequences of lines by fitting as many words
+-- as possible into a line
+-- ---------------------------------------------------------------  
 FUN break : seq[word] -> seq[seq[word]]
 DEF break(<>) == <>
 DEF break(word :: rt) == 
@@ -76,6 +111,9 @@ DEF break(word :: rt) ==
         line :: break(trailer)
 
 
+-- ---------------------------------------------------------------  
+-- Calculate the number of words fitting in a line
+-- ---------------------------------------------------------------  
 FUN fit : real -> seq[word] -> nat
 DEF fit(supply)(<>) == 0
 DEF fit(supply)(word :: rt) == 
@@ -86,39 +124,41 @@ DEF fit(supply)(word :: rt) ==
         ELSE    0
         FI
 
-
-
+-- ---------------------------------------------------------------  
+-- Get the width of a string based on the metrics of the window
+-- ---------------------------------------------------------------
 FUN getWidth : metrics -> string -> real
 DEF getWidth(metr)(str) == w
   WHERE
     (w,h) == dimensions(metr)(`(str)) 
     
-  
-
-DEF testBody == body( par(left, seq1) ::
+-- ---------------------------------------------------------------  
+-- Test Data
+-- ---------------------------------------------------------------  
+DEF testBody == body( par(left, seq2) ::
                       par(right, seq2) ::
-                      par(center, seq1) ::
+                      -- par(center, seq1) ::
                       par(justify, seq2) :: <>)
-
-FUN testWords : seq[word]
-DEF testWords == word(word1, "15"!) :: word(word2, "15"!) :: word(word3, "15"!) :: word(word4, "15"!):: word(word5, "15"!) :: <>
 
 
 FUN word1 word2 word3 word4 word5 word6 : string
--- DEF word1 == !("Lorem")
--- DEF word2 == !("ipsum")
--- DEF word3 == !("dolor")
--- DEF word4 == !("sit")
--- DEF word5 == !("amet")
--- DEF word6 == !("consetetur") 
-DEF word1 == !("word1")
-DEF word2 == !("word2")
-DEF word3 == !("word3")
-DEF word4 == !("word4")
-DEF word5 == !("word5")
-DEF word6 == !("word6") 
+DEF word1 == !("Lorem")
+DEF word2 == !("ipsum")
+DEF word3 == !("dolor")
+DEF word4 == !("sit")
+DEF word5 == !("amet")
+DEF word6 == !("consetetur") 
+-- DEF word1 == !("word1")
+-- DEF word2 == !("word2")
+-- DEF word3 == !("word3")
+-- DEF word4 == !("word4")
+-- DEF word5 == !("word5")
+-- DEF word6 == !("word6") 
 
 
 FUN seq1 seq2 : seq[string]
-DEF seq1 == word1 :: word2 :: word3 :: word4 :: word5 :: word6 :: word1 :: word2 :: word3 :: <>
-DEF seq2 == word2 :: word2 :: word6 :: word4 :: word2 :: word5 :: word4 :: word2 :: word6 :: <>
+DEF seq1 == word1 :: word2 :: word3 :: word4 :: word5 :: word6 :: word1 :: word2 :: word3 :: word4 :: word5 :: word6 ::  <>
+DEF seq2 == word2 :: word1 :: word6 :: word4 :: word2 :: word5 :: word4 :: word2 :: word6 :: <>
+
+
+
