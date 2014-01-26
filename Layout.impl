@@ -176,13 +176,7 @@ DEF word2 == !("ipsum")
 DEF word3 == !("dolor")
 DEF word4 == !("sit")
 DEF word5 == !("amet")
-DEF word6 == !("consetetur") 
--- DEF word1 == !("word1")
--- DEF word2 == !("word2")
--- DEF word3 == !("word3")
--- DEF word4 == !("word4")
--- DEF word5 == !("word5")
--- DEF word6 == !("word6") 
+DEF word6 == !("consetetur")  
 
 
 FUN seq1 seq2 : seq[string]
