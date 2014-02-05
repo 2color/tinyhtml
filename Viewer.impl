@@ -5,6 +5,11 @@ IMPORT Settings COMPLETELY
        Draw COMPLETELY
 
 IMPORT Com COMPLETELY
+       ProcessArgs COMPLETELY
+       BasicIO COMPLETELY
+       String COMPLETELY
+       StringConv ONLY `
+       File COMPLETELY
        ComCompose COMPLETELY
        Denotation COMPLETELY
        Nat COMPLETELY
@@ -37,10 +42,30 @@ DATA action == exit
 -- Entry Function
 -- ---------------------------------------------------------------------
 DEF viewer == 
-              setupGui                          & (\\G.
-              setupWindow(G)                    & (\\win.
-              display(edit(G), draw(layout(metr(G), testBody)))  &
-              waitForTermination(G, win)))
+              argCount          & (\\n.
+              IF n < 2 THEN writeLine("pass a HTML file. ") & exit(0)
+              ELSE 
+                arg(1)                & (\\fileName.
+                readFile(fileName)    & (\\html.
+                setupGui              & (\\G.
+                setupWindow(G)        & (\\win.
+                display(edit(G), draw(layout(metr(G), testBody)))  &
+                waitForTermination(G, win)))
+                ))
+              FI
+              )
+
+
+-- ---------------------------------------------------------------------
+-- Read the file and return the full content
+-- ---------------------------------------------------------------------
+FUN readFile : denotation -> com[string]
+DEF readFile(fileName) == 
+  open(fileName, "r")   & (\\file.
+  read(file, max'Nat)   & (\\string.
+  succeed(string)
+  ))
+
 
 -- ---------------------------------------------------------------------
 -- Setup of window
