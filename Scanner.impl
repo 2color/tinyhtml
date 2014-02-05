@@ -13,8 +13,8 @@ IMPORT Seq          COMPLETELY
        Map          COMPLETELY
 
 -- Scanning = Partitioning + Translating
-FUN scan : denotation -> seq[token]
-DEF scan(d) == (translate o partition)(asString(d))
+DEF scan(string) == (translate o partition)(string)
+DEF scan(den) == (translate o partition)(asString(den))
 
 
 -- Partition input into its lexemes.
