@@ -10,4 +10,4 @@ FUN margin left right middle usableWidth : real
 FUN glue lineSpacing parSpacing : real 
 FUN canvasBackground : color
 FUN stdFont : font
-FUN exitButton title : denotation
+FUN exitButton : denotation
