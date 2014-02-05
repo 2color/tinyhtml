@@ -133,7 +133,7 @@ DEF parseP(pRight :: rest) ==
         r2 == parseCP(r1)
     IN 
         IF error?(r2) THEN (fail, r2)
-        ELSE (par(left, words), r2)
+        ELSE (par(right, words), r2)
         FI
 
 
@@ -142,7 +142,7 @@ DEF parseP(pCenter :: rest) ==
         r2 == parseCP(r1)
     IN 
         IF error?(r2) THEN (fail, r2)
-        ELSE (par(left, words), r2)
+        ELSE (par(center, words), r2)
         FI
 
 
@@ -151,7 +151,7 @@ DEF parseP(pJustify :: rest) ==
         r2 == parseCP(r1)
     IN 
         IF error?(r2) THEN (fail, r2)
-        ELSE (par(left, words), r2)
+        ELSE (par(justify, words), r2)
         FI
 
 DEF parseP(input) == (fail, error :: input)
