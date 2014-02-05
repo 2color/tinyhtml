@@ -1,0 +1,5 @@
+SIGNATURE Token
+
+IMPORT Denotation ONLY denotation
+
+--TYPE token ==
