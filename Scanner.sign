@@ -7,4 +7,3 @@ IMPORT Denotation   ONLY denotation
 
 
 FUN scan : string -> seq[token]
-FUN scan : denotation -> seq[token]

@@ -2,6 +2,9 @@ IMPLEMENTATION Syntax
 
 IMPORT String COMPLETELY
        Seq COMPLETELY
+       SeqReduce COMPLETELY
+       StringConv COMPLETELY
+       Char COMPLETELY
 
 
 DATA html       ==  html(title : title, body : body)
@@ -19,3 +22,4 @@ DATA par        ==  par(align : alignment, content : seq[string])
 DATA alignment  == left right center justify
 
 
+DEF getTitle(html) == `(reduce(\\a,b. a ++ %(blank) ++ b ,%(blank))(content(title(html))))

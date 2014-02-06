@@ -24,7 +24,7 @@ DEF parse(input) ==
         -- failed to match a token return fail
         -- TODO CHECK THIS - this needs to fail gracefully and be 
         -- flexible. It might make sense to just ignore trailing text
-        IF ::?(rt) or fail?(html) or error?(rt) THEN fail
+        IF fail?(html) THEN fail
         ELSE html
         FI
 

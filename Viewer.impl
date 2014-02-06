@@ -2,6 +2,8 @@ IMPLEMENTATION Viewer
 
 IMPORT Settings COMPLETELY
        Layout COMPLETELY
+       Parser COMPLETELY
+       Syntax COMPLETELY
        Scanner COMPLETELY
        Draw COMPLETELY
 
@@ -11,6 +13,7 @@ IMPORT Com COMPLETELY
        String COMPLETELY
        StringConv ONLY `
        File COMPLETELY
+       Compose COMPLETELY
        ComCompose COMPLETELY
        Denotation COMPLETELY
        Nat COMPLETELY
@@ -33,7 +36,7 @@ IMPORT WinButton COMPLETELY
 
 DATA gui == gui(edit : canvasEditor,
                 emit : emitter[action],
-                title : denotation,
+                html : html,
                 metr : metrics)
 
 DATA action == exit
@@ -47,14 +50,23 @@ DEF viewer ==
               IF n < 2 THEN writeLine("pass a HTML file. ") & exit(0)
               ELSE 
                 arg(1)                & (\\fileName.
-                readFile(fileName)    & (\\html.
-                setupGui              & (\\G.
+                readFile(fileName)    & (\\rawHtml.
+                setupGui(processHtml(rawHtml))  & (\\G.
                 setupWindow(G)        & (\\win.
-                display(edit(G), draw(layout(metr(G), testBody)))  &
+                display(edit(G), draw(layout(metr(G), body(html(G)))))  &
                 waitForTermination(G, win)))
                 ))
               FI
               )
+
+
+
+
+-- ---------------------------------------------------------------------
+-- Scan and Parse the html
+-- ---------------------------------------------------------------------
+FUN processHtml : string -> html
+DEF processHtml(string) == (parse o scan)(string)
 
 
 -- ---------------------------------------------------------------------
@@ -71,19 +83,20 @@ DEF readFile(fileName) ==
 -- ---------------------------------------------------------------------
 -- Setup of window
 -- ---------------------------------------------------------------------
-FUN setupGui : com[gui]
-DEF setupGui == 
-                canvasEditor            & (\\edit. -- com[canvasEditor]
-                emitter                 & (\\emit. -- com[emitter]
-                fontMetrics(stdFont)    & (\\metr.
-                succeed(gui(edit, emit, title, metr)))))
+FUN setupGui : html -> com[gui]
+DEF setupGui(html) == 
+    canvasEditor            & (\\edit. -- com[canvasEditor]
+    emitter                 & (\\emit. -- com[emitter]
+    fontMetrics(stdFont)    & (\\metr.
+    succeed(gui(edit, emit, html, metr)))))
+
 
 
 FUN setupWindow : gui -> com[window]
 DEF setupWindow(G) == 
-                        window(frame(G))                & (\\win.
-                        set(win, titleName(title(G)))   & (\\ _ .
-                        grab(win)                       & (\\ _ .
+                        window(frame(G))                         & (\\win.
+                        set(win, titleName(getTitle(html(G))))   & (\\ _ .
+                        grab(win)                                & (\\ _ .
                         succeed(win))))
 
 

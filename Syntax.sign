@@ -17,3 +17,9 @@ TYPE par        ==  par(align : alignment, content : seq[string])
                     fail
 
 TYPE alignment  == left right center justify
+
+
+-- ---------------------------------------------------------------  
+-- get the title from html as a denotation
+-- ---------------------------------------------------------------  
+FUN getTitle : html -> denotation

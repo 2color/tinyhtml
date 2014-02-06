@@ -14,7 +14,6 @@ IMPORT Seq          COMPLETELY
 
 -- Scanning = Partitioning + Translating
 DEF scan(string) == (translate o partition)(string)
-DEF scan(den) == (translate o partition)(asString(den))
 
 
 -- Partition input into its lexemes.
