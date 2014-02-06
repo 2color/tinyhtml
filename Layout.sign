@@ -10,5 +10,3 @@ IMPORT WinConfig ONLY point
 FUN layout : metrics ** body -> seq[posWord]
 
 TYPE posWord == posWord(text : string, pos : point, width : real)
-
-FUN testBody : body

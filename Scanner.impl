@@ -89,7 +89,7 @@ DEF parens?(c) == c = ("("!) or c = (")"!)
 
 -- Function mapping lexemes to their tokens 
 FUN translate : seq[string] -> seq[token]
-DEF translate(strings) == trans * strings --
+DEF translate(strings) == trans * strings
 
 FUN trans : string -> token
 DEF trans(str) == IF def?(str, table) THEN table!str

@@ -161,27 +161,4 @@ DEF getWidth(metr)(str) == w
   WHERE
     (w,h) == dimensions(metr)(`(str)) 
     
--- ---------------------------------------------------------------  
--- Test Data
--- ---------------------------------------------------------------  
-DEF testBody == body( par(left, seq2) ::
-                      par(right, seq2 ++ seq1 ++ seq1) ::
-                      par(justify, seq1) ::
-                      par(center, seq2 ++ seq1) :: <>)
-
-
-FUN word1 word2 word3 word4 word5 word6 : string
-DEF word1 == !("Lorem")
-DEF word2 == !("ipsum")
-DEF word3 == !("dolor")
-DEF word4 == !("sit")
-DEF word5 == !("amet")
-DEF word6 == !("consetetur")  
-
-
-FUN seq1 seq2 : seq[string]
-DEF seq1 == word1 :: word2 :: word3 :: word4 :: word5 :: word6 :: word1 :: word2 :: word3 :: word4 :: word5 :: word6 ::  <>
-DEF seq2 == word2 :: word1 :: word6 :: word4 :: word2 :: word5 :: word4 :: word2 :: word6 :: <>
-
-
 
