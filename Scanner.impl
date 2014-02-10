@@ -29,7 +29,7 @@ DEF p1(text) ==
              ELSE 
                 locate(whitespaceOrLt?)(text) 
              FI
-        (word, rest) == split(i, text)
+        (word, rest) == tSplit(i, text)
     IN word :: partition(rest)
 
 

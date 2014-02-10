@@ -54,8 +54,12 @@ DEF layoutPars(metr, yPos, par(align, words) :: rt) ==
 FUN layoutPar : alignment ** real ** real ** real ** seq[seq[word]] -> seq[posWord]
 DEF layoutPar(_, _, _, _, <>) == <>
 DEF layoutPar(align, lineHeight, yPos , lineNum,  line :: rt) ==
-    layoutLine(align, margin, lineYPosition, line) ++ 
-        layoutPar(align, lineHeight, yPos, lineNum + 1 , rt)
+    IF ( justify?(align) and empty?(rt) ) THEN
+      layoutLine(left, margin, lineYPosition, line)
+    ELSE  
+      layoutLine(align, margin, lineYPosition, line) ++ 
+          layoutPar(align, lineHeight, yPos, lineNum + 1 , rt)
+    FI
     WHERE
         lineYPosition == yPos + (lineHeight + lineSpacing) * lineNum
 
