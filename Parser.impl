@@ -35,10 +35,6 @@ DEF parseH(input) ==
         r4 == parseCH(r3)
     IN
         (html(title, body), r4)
-        -- IF empty?(r4) THEN 
-        -- ELSE 
-        --     (fail, r4) 
-        -- FI
 
 FUN parseT: seq[token] -> title ** seq[token]
 
