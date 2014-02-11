@@ -146,37 +146,44 @@ DEF openPar?(t) == pLeft?(t) or pRight?(t) or pCenter?(t) or pJustify?(t)
 -- ----------------------------------------------------------------
 
 FUN parseOH: seq[token] -> seq[token]
+DEF parseOH(<>) == <>
 DEF parseOH(t :: rest) ==
     IF openHtml?(t) THEN rest
     ELSE error :: (t :: rest) FI
 
 FUN parseCH: seq[token] -> seq[token]
+DEF parseCH(<>) == <>
 DEF parseCH(t :: rest) ==
     IF closeHtml?(t) THEN rest
     ELSE error :: (t :: rest) FI
 
 FUN parseOT: seq[token] -> seq[token]
+DEF parseOT(<>) == <>
 DEF parseOT(t :: rest) ==
     IF openTitle?(t) THEN rest
     ELSE error :: (t :: rest) FI
 
 FUN parseCT: seq[token] -> seq[token]
+DEF parseCT(<>) == <>
 DEF parseCT(t :: rest) ==
     IF closeTitle?(t) THEN rest
     ELSE error :: (t :: rest) FI
 
 FUN parseOB: seq[token] -> seq[token]
+DEF parseOB(<>) == <>
 DEF parseOB(t :: rest) ==
     IF openBody?(t) THEN rest
     ELSE error :: (t :: rest) FI
 
 FUN parseCB: seq[token] -> seq[token]
+DEF parseCB(<>) == <>
 DEF parseCB(t :: rest) ==
     IF closeBody?(t) THEN rest
     ELSE error :: (t :: rest) FI
 
 
 FUN parseCP: seq[token] -> seq[token]
+DEF parseCP(<>) == <>
 DEF parseCP(t :: rest) ==
     IF closeP?(t) THEN rest
     ELSE error :: (t :: rest) FI
